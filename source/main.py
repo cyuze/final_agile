@@ -15,6 +15,15 @@ class Application(tk.Frame):
     def create_widgets(self):
         # 画像の読み込み
         cimg1 = Image.open("./img/自動販売機.png")
+# <<<<<<< dev_kody
+        cimg_ins_coin = Image.open("./img/コイン投入口.png")
+        # 画像のリサイズ
+        cimg1 = cimg1.resize((480, 653))  # 画像を2倍にする例
+        cimg_ins_coin = cimg_ins_coin.resize((132, 95))
+        # 画像ファイルのオブジェクトの作成
+        self.img1 = ImageTk.PhotoImage(cimg1)
+        self.img_ins_coin = ImageTk.PhotoImage(cimg_ins_coin)
+# =======
         cimg_cola = Image.open("./img/コーラ.png")
         cimg_water = Image.open("./img/水.png")
         cimg_tea = Image.open("./img/お茶.png")
@@ -28,9 +37,19 @@ class Application(tk.Frame):
         self.img_cola = ImageTk.PhotoImage(cimg_cola)
         self.img_water = ImageTk.PhotoImage(cimg_water)
         self.img_tea = ImageTk.PhotoImage(cimg_tea)
+# >>>>>>> main
         # 画像オブジェクトをラベルに貼り付けて表示
         # 自販機の画像
         self.zihanki = tk.Label(self, image=self.img1)
+# <<<<<<< dev_kody
+        self.zihanki.place(x=0,y=0)
+        
+        self.label_ins_coin = tk.Label(self, image=self.img_ins_coin, bg='#e5231e')
+        self.label_ins_coin.place(x=297,y=360)
+        
+        self.label_ret_coin = tk.Label(self, text='おつり　　　　　円', fg='white', bg='#e5231e', font=('', 20))
+        self.label_ret_coin.place(x=60, y=420)
+=======
         self.zihanki.place(x=0, y=0)
 # <<<<<<< dev_yuze
         # コーラの画像
@@ -115,6 +134,7 @@ class Application(tk.Frame):
         self.tonyu_label.place(x=250, y=350)
         
         
+# >>>>>>> main
 
 if __name__ == '__main__':
     root = tk.Tk()
