@@ -43,8 +43,21 @@ class Application(tk.Frame):
         # 自販機の画像
         self.zihanki = tk.Label(self, image=self.img1)
 # <<<<<<< dev_kody
-        self.zihanki.place(x=0,y=0)
+        # おつりラベルたち
+        self.label_ret_coin1 = tk.Label(self, text='おつり', fg='black', bg='#e5231e', font=('', 20))
+        self.label_ret_coin1.place(x=60, y=410)
         
+        self.label_ret_coin2 = tk.Label(self, text='円',fg='black', bg='#e5231e', font=('', 20))
+        self.label_ret_coin2.place(x=255,y=410)
+                
+        # おつり表示
+        self.label_show_retcoin = tk.Label(self, text='', bg='#e5231e', font=('', 20), width=8, fg='white', anchor='e')
+        self.label_show_retcoin.place(x=140, y=410)
+        
+
+        self.label_ins_coin = tk.Label(self, image=self.img_ins_coin, bg='#e5231e')
+        self.label_ins_coin.place(x=297,y=360)
+
         # おつりラベルたち
         self.label_ret_coin1 = tk.Label(self, text='おつり', fg='black', bg='#e5231e', font=('', 20))
         self.label_ret_coin1.place(x=60, y=410)
@@ -55,6 +68,7 @@ class Application(tk.Frame):
         # おつり表示
         self.label_show_retcoin = tk.Label(self, text='', bg='#e5231e', font=('', 20), width=8, fg='white', anchor='e')
         self.label_show_retcoin.place(x=140, y=410)
+
 # =======
         self.zihanki.place(x=0, y=0)
 # <<<<<<< dev_yuze
@@ -72,27 +86,36 @@ class Application(tk.Frame):
         # ラベル
         # 商品が出てくる所
         self.juice_output_label = tk.Label(self, text='', font=('', 25), relief='solid')
-        self.juice_output_label.place(x=180, y=530)
+        # コーラの値段
+        self.cola_price = tk.Label(self, text='160円', font=('',15))
+        self.cola_price.place(x=90, y=230)
         # コーラの表記
         self.cola_buy = tk.Label(self, text='コーラ', font=('',15))
-        self.cola_buy.place(x=90, y=230)
-        # コーラを買う赤いボタン
+        self.cola_buy.place(x=90, y=260)
+        self.cola_buy.bind("<Button-1>", self.cola_buy_event)
+        # コーラの赤いボタン
         self.cola_buy_btn = tk.Label(self, bg='red', width=2)
-        self.cola_buy_btn.place(x=65, y=233)
+        self.cola_buy_btn.place(x=65, y=263)
+        # お茶の値段
+        self.tea_price = tk.Label(self, text='160円', font=('',15))
+        self.tea_price.place(x=230, y=230)
         # お茶の表記
         self.tea_buy = tk.Label(self, text='お茶', font=('',15))
-        self.tea_buy.place(x=230, y=230)
-        # お茶を買う赤いボタン
+        self.tea_buy.place(x=230, y=260)
+        self.tea_buy.bind("<Button-1>", self.tea_buy_event)
+        # お茶の赤いボタン
         self.tea_buy_btn = tk.Label(self, bg='red', width=2)
-        self.tea_buy_btn.place(x=205, y=233)
+        self.tea_buy_btn.place(x=205, y=263)
+        # 水の値段
+        self.water_price = tk.Label(self, text='110円', font=('',15))
+        self.water_price.place(x=365, y=230)
         # 水の表記
         self.water_buy = tk.Label(self, text='水', font=('',15))
-        self.water_buy.place(x=365, y=230)
-        # 水を買う赤いボタン
+        self.water_buy.place(x=365, y=260)
+        self.water_buy.bind("<Button-1>", self.water_buy_event)
+        # 水の赤いボタン
         self.water_buy_btn = tk.Label(self, bg='red', width=2)
-        self.water_buy_btn.place(x=340, y=233)
-        
-
+        self.water_buy_btn.place(x=340, y=263)
 
 # ======= rui
         
@@ -136,7 +159,7 @@ class Application(tk.Frame):
         self.img6 = ImageTk.PhotoImage(cimg6)
         self.gohyakuen = tk.Label(self, image=self.img6, bg='#e5231e')
         self.gohyakuen.place(x=230, y=455)
-        
+     
         self.gohyakuen.bind('<Button-1>', self.gohyakuen_click)
         
         
@@ -204,7 +227,44 @@ class Application(tk.Frame):
             
             
         
-        
+    def cola_buy_event(self, event):
+            cola_lamp = self.cola_buy_btn.cget('bg')  #ランプの色
+            if cola_lamp == 'blue':
+                    self.juice_output_label.place(x=180, y=530)     
+                    self.juice_output_label.configure(text='コーラ')
+                    self.coin_count -= 160
+                    self.tonyu_label2.configure(text=f'{self.coin_count}')
+                    if self.coin_count < 160:
+                            self.cola_buy_btn.configure(bg='red')
+                            self.tea_buy_btn.configure(bg='red')
+                    if self.coin_count < 110:
+                            self.water_buy_btn.configure(bg='red')
+
+    def tea_buy_event(self, event):
+            tea_lamp = self.tea_buy_btn.cget('bg')  #ランプの色
+            if tea_lamp == 'blue':
+                    self.juice_output_label.place(x=180, y=530)     
+                    self.juice_output_label.configure(text='お茶')
+                    self.coin_count -= 160
+                    self.tonyu_label2.configure(text=f'{self.coin_count}')
+                    if self.coin_count < 160:
+                            self.cola_buy_btn.configure(bg='red')
+                            self.tea_buy_btn.configure(bg='red')
+                    if self.coin_count < 110:
+                            self.water_buy_btn.configure(bg='red')
+    
+    def water_buy_event(self, event):
+            water_lamp = self.water_buy_btn.cget('bg')  #ランプの色
+            if water_lamp == 'blue':
+                    self.juice_output_label.place(x=180, y=530)     
+                    self.juice_output_label.configure(text='水')
+                    self.coin_count -= 110
+                    self.tonyu_label2.configure(text=f'{self.coin_count}')
+                    if self.coin_count < 160:
+                            self.cola_buy_btn.configure(bg='red')
+                            self.tea_buy_btn.configure(bg='red')
+                    if self.coin_count < 110:
+                            self.water_buy_btn.configure(bg='red')
         
 # >>>>>>> main
 
