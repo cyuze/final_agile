@@ -16,7 +16,7 @@ class Application(tk.Frame):
     def create_widgets(self):
         # 画像の読み込み
         cimg1 = Image.open("./img/自動販売機.png")
-# <<<<<<< dev_kody
+
         cimg_ins_coin = Image.open("./img/コイン投入口.png")
         # 画像のリサイズ
         cimg1 = cimg1.resize((480, 653))  # 画像を2倍にする例
@@ -24,7 +24,7 @@ class Application(tk.Frame):
         # 画像ファイルのオブジェクトの作成
         self.img1 = ImageTk.PhotoImage(cimg1)
         self.img_ins_coin = ImageTk.PhotoImage(cimg_ins_coin)
-# =======
+
         cimg_cola = Image.open("./img/コーラ.png")
         cimg_water = Image.open("./img/水.png")
         cimg_tea = Image.open("./img/お茶.png")
@@ -38,14 +38,10 @@ class Application(tk.Frame):
         self.img_cola = ImageTk.PhotoImage(cimg_cola)
         self.img_water = ImageTk.PhotoImage(cimg_water)
         self.img_tea = ImageTk.PhotoImage(cimg_tea)
-# >>>>>>> main
+
         # 画像オブジェクトをラベルに貼り付けて表示
         # 自販機の画像
         self.zihanki = tk.Label(self, image=self.img1)
-# <<<<<<< dev_kody
-        # おつりラベルたち
-        self.label_ret_coin1 = tk.Label(self, text='おつり', fg='black', bg='#e5231e', font=('', 20))
-        self.label_ret_coin1.place(x=60, y=410)
         
         self.label_ret_coin2 = tk.Label(self, text='円',fg='black', bg='#e5231e', font=('', 20))
         self.label_ret_coin2.place(x=255,y=410)
@@ -64,14 +60,11 @@ class Application(tk.Frame):
         
         self.label_ret_coin2 = tk.Label(self, text='円',fg='black', bg='#e5231e', font=('', 20))
         self.label_ret_coin2.place(x=255,y=410)
-        
+
         # おつり表示
         self.label_show_retcoin = tk.Label(self, text='', bg='#e5231e', font=('', 20), width=8, fg='white', anchor='e')
         self.label_show_retcoin.place(x=140, y=410)
 
-# =======
-        self.zihanki.place(x=0, y=0)
-# <<<<<<< dev_yuze
         # コーラの画像
         self.cola = tk.Label(self, image=self.img_cola)
         self.cola.place(x=55, y=120)
@@ -159,9 +152,8 @@ class Application(tk.Frame):
         self.img6 = ImageTk.PhotoImage(cimg6)
         self.gohyakuen = tk.Label(self, image=self.img6, bg='#e5231e')
         self.gohyakuen.place(x=230, y=455)
-     
+
         self.gohyakuen.bind('<Button-1>', self.gohyakuen_click)
-        
         
         cimg7 = Image.open("./img/1000円.png")
         cimg7 = cimg7.resize((90, 40))  
@@ -169,6 +161,27 @@ class Application(tk.Frame):
         self.senen = tk.Label(self, image=self.img7, bg='#e5231e')
         self.senen.place(x=280, y=457)
         
+        self.tonyu_label1 = tk.Label(self, text='投  入\n金  額', bg='#e5231e', font=('', 20))
+        self.tonyu_label1.place(x=60, y=340)
+        
+        self.coin_count = 0
+        self.tonyu_label2 = tk.Label(self, text=f'{self.coin_count}', bg='black', font=('', 20), width=8, fg='green', anchor='e')
+        self.tonyu_label2.place(x=140, y=350)
+        
+        self.tonyu_label3 = tk.Label(self, text='円', bg='#e5231e', font=('', 20))
+        self.tonyu_label3.place(x=255, y=350)
+        
+        self.label_ins_coin.bind('<Button-1>', self.event_return_coin)
+
+    def event_return_coin(self, event):
+        self.label_show_retcoin.configure(text=f'{self.coin_count}')
+        self.coin_count = 0
+        self.tonyu_label2.configure(text=f'{self.coin_count}')
+        if self.coin_count == 0:
+                self.cola_buy_btn.configure(bg='red')
+                self.tea_buy_btn.configure(bg='red')
+                self.water_buy_btn.configure(bg='red')
+
         self.senen.bind('<Button-1>', self.senen_click)
         
         
@@ -266,7 +279,6 @@ class Application(tk.Frame):
                     if self.coin_count < 110:
                             self.water_buy_btn.configure(bg='red')
         
-# >>>>>>> main
 
 if __name__ == '__main__':
     root = tk.Tk()
