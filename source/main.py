@@ -161,6 +161,8 @@ class Application(tk.Frame):
         self.senen = tk.Label(self, image=self.img7, bg='#e5231e')
         self.senen.place(x=280, y=457)
         
+        
+        
         self.tonyu_label1 = tk.Label(self, text='投  入\n金  額', bg='#e5231e', font=('', 20))
         self.tonyu_label1.place(x=60, y=340)
         
@@ -172,6 +174,8 @@ class Application(tk.Frame):
         self.tonyu_label3.place(x=255, y=350)
         
         self.label_ins_coin.bind('<Button-1>', self.event_return_coin)
+        self.senen.bind('<Button-1>', self.senen_click)
+        
 
     def event_return_coin(self, event):
         self.label_show_retcoin.configure(text=f'{self.coin_count}')
@@ -182,50 +186,51 @@ class Application(tk.Frame):
                 self.tea_buy_btn.configure(bg='red')
                 self.water_buy_btn.configure(bg='red')
 
-        self.senen.bind('<Button-1>', self.senen_click)
         
-        
-        self.tonyu_label1 = tk.Label(self, text='投  入\n金  額', bg='#e5231e', font=('', 20))
-        self.tonyu_label1.place(x=60, y=340)
-        
-        self.coin_count = 0
-        self.tonyu_label2 = tk.Label(self, text=f'{self.coin_count}', bg='black', font=('', 20), width=8, fg='green', anchor='e')
-        self.tonyu_label2.place(x=140, y=350)
-        
-        self.tonyu_label3 = tk.Label(self, text='円', bg='#e5231e', font=('', 20))
-        self.tonyu_label3.place(x=255, y=350)
-        
-        if self.coin_count >= 160:
-            self.cola_buy_btn.configure(bg='blue')
         
     def goen_click(self, event=None):
         messagebox.showinfo('投入エラー', '5円硬貨は使えません')
         
     def juen_click(self, event=None):
-        self.coin_count += 10
-        self.tonyu_label2.configure(text=f'{self.coin_count}')
-        self.update_coin()
+        if self.coin_count >= 2990:
+            messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        else:
+            self.coin_count += 10
+            self.tonyu_label2.configure(text=f'{self.coin_count}')
+            self.update_coin()
         
     def gojuen_click(self, event=None):
-        self.coin_count += 50
-        self.tonyu_label2.configure(text=f'{self.coin_count}')
-        self.update_coin()
-        
+        if self.coin_count >= 2950:
+            messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        else:
+            self.coin_count += 50
+            self.tonyu_label2.configure(text=f'{self.coin_count}')
+            self.update_coin()
+            
         
     def hyakuen_click(self, event=None):
-        self.coin_count += 100
-        self.tonyu_label2.configure(text=f'{self.coin_count}')
-        self.update_coin()
+        if self.coin_count > 2800:
+            messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        else:
+            self.coin_count += 100
+            self.tonyu_label2.configure(text=f'{self.coin_count}')
+            self.update_coin()
         
     def gohyakuen_click(self, event=None):
-        self.coin_count += 500
-        self.tonyu_label2.configure(text=f'{self.coin_count}')
-        self.update_coin()
+        if self.coin_count >= 2500:
+            messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        else:
+            self.coin_count += 500
+            self.tonyu_label2.configure(text=f'{self.coin_count}')
+            self.update_coin()
         
     def senen_click(self, event=None):
-        self.coin_count += 1000
-        self.tonyu_label2.configure(text=f'{self.coin_count}')
-        self.update_coin()
+        if self.coin_count >= 2000:
+            messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        else:
+            self.coin_count += 1000
+            self.tonyu_label2.configure(text=f'{self.coin_count}')
+            self.update_coin()
         
     def update_coin(self):
         if self.coin_count >= 160:
@@ -235,8 +240,7 @@ class Application(tk.Frame):
         if self.coin_count >= 110:
             self.water_buy_btn.configure(bg='blue')
         
-        # if self.coin_count >= 3000:
-        #     messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        
             
             
         
