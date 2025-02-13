@@ -46,6 +46,12 @@ class Application(tk.Frame):
         self.label_ret_coin2 = tk.Label(self, text='円',fg='black', bg='#e5231e', font=('', 20))
         self.label_ret_coin2.place(x=255,y=410)
                 
+        # 水の本数格納変数
+        self.water_count = 10
+        # コーラの本数
+        self.cola_count = 10
+        # お茶の本数
+        self.tea_count = 10
         # おつり表示
         self.label_show_retcoin = tk.Label(self, text='', bg='#e5231e', font=('', 20), width=8, fg='white', anchor='e')
         self.label_show_retcoin.place(x=140, y=410)
@@ -172,17 +178,32 @@ class Application(tk.Frame):
         self.tonyu_label3.place(x=255, y=350)
         
         self.label_ins_coin.bind('<Button-1>', self.event_return_coin)
+        self.senen.bind('<Button-1>', self.senen_click)
 
     def event_return_coin(self, event):
         self.label_show_retcoin.configure(text=f'{self.coin_count}')
         self.coin_count = 0
         self.tonyu_label2.configure(text=f'{self.coin_count}')
         if self.coin_count == 0:
+            
+            # コーラ売り切れ確認
+            if self.cola_count > 1:
                 self.cola_buy_btn.configure(bg='red')
+            else:
+                self.cola_buy_btn.configure(bg='green')
+                
+            # お茶売り切れ確認
+            if self.tea_count > 1:
                 self.tea_buy_btn.configure(bg='red')
+            else:
+                self.tea_buy_btn.configure(bg='green')
+                
+            # 水売り切れ確認
+            if self.water_count > 1:
                 self.water_buy_btn.configure(bg='red')
+            else:
+                self.water_buy_btn.configure(bg='green')
 
-        self.senen.bind('<Button-1>', self.senen_click)
         
         
         self.tonyu_label1 = tk.Label(self, text='投  入\n金  額', bg='#e5231e', font=('', 20))
@@ -229,11 +250,24 @@ class Application(tk.Frame):
         
     def update_coin(self):
         if self.coin_count >= 160:
-            self.cola_buy_btn.configure(bg='blue')
-            self.tea_buy_btn.configure(bg='blue')
+            # コーラ売り切れ確認
+            if self.cola_count > 1:
+                self.cola_buy_btn.configure(bg='blue')
+            else:
+                self.cola_buy_btn.configure(bg='green')
+
+            # お茶売り切れ確認
+            if self.tea_count > 1:
+                self.tea_buy_btn.configure(bg='blue')
+            else:
+                self.tea_buy_btn.configure(bg='green')
             
         if self.coin_count >= 110:
-            self.water_buy_btn.configure(bg='blue')
+            # 水売り切れ確認
+            if self.water_count > 1:
+                self.water_buy_btn.configure(bg='blue')
+            else:
+                self.water_buy_btn.configure(bg='green')
         
         # if self.coin_count >= 3000:
         #     messagebox.showwarning('投入エラー', '3000円以上は投入できません')
@@ -242,42 +276,60 @@ class Application(tk.Frame):
         
     def cola_buy_event(self, event):
             cola_lamp = self.cola_buy_btn.cget('bg')  #ランプの色
-            if cola_lamp == 'blue':
-                    self.juice_output_label.place(x=180, y=530)     
-                    self.juice_output_label.configure(text='コーラ')
-                    self.coin_count -= 160
-                    self.tonyu_label2.configure(text=f'{self.coin_count}')
-                    if self.coin_count < 160:
-                            self.cola_buy_btn.configure(bg='red')
-                            self.tea_buy_btn.configure(bg='red')
-                    if self.coin_count < 110:
-                            self.water_buy_btn.configure(bg='red')
+            if self.cola_count > 1:
+                if cola_lamp == 'blue':
+                        self.juice_output_label.place(x=180, y=530)     
+                        self.juice_output_label.configure(text='コーラ')
+                        self.cola_count -= 1
+                        self.coin_count -= 160
+                        self.tonyu_label2.configure(text=f'{self.coin_count}')
+                        if self.coin_count < 160:
+                                self.cola_buy_btn.configure(bg='red')
+                                self.tea_buy_btn.configure(bg='red')
+                        if self.coin_count < 110:
+                                self.water_buy_btn.configure(bg='red')
+            else:
+                messagebox.showinfo('売り切れ！', 'コーラが売り切れました。')
+                self.cola_buy_btn.configure(bg='green')
+                self.cola_buy.configure(text='売り切れ')
 
     def tea_buy_event(self, event):
             tea_lamp = self.tea_buy_btn.cget('bg')  #ランプの色
-            if tea_lamp == 'blue':
-                    self.juice_output_label.place(x=180, y=530)     
-                    self.juice_output_label.configure(text='お茶')
-                    self.coin_count -= 160
-                    self.tonyu_label2.configure(text=f'{self.coin_count}')
-                    if self.coin_count < 160:
-                            self.cola_buy_btn.configure(bg='red')
-                            self.tea_buy_btn.configure(bg='red')
-                    if self.coin_count < 110:
-                            self.water_buy_btn.configure(bg='red')
-    
+            if self.tea_count > 1:
+                if tea_lamp == 'blue':
+                        self.juice_output_label.place(x=180, y=530)     
+                        self.juice_output_label.configure(text='お茶')
+                        self.tea_count -= 1
+                        self.coin_count -= 160
+                        self.tonyu_label2.configure(text=f'{self.coin_count}')
+                        if self.coin_count < 160:
+                                self.cola_buy_btn.configure(bg='red')
+                                self.tea_buy_btn.configure(bg='red')
+                        if self.coin_count < 110:
+                                self.water_buy_btn.configure(bg='red')
+            else:
+                messagebox.showinfo('売り切れ！', 'お茶が売り切れました。')
+                self.tea_buy_btn.configure(bg='green')
+                self.tea_buy.configure(text='売り切れ')
+                
     def water_buy_event(self, event):
             water_lamp = self.water_buy_btn.cget('bg')  #ランプの色
-            if water_lamp == 'blue':
-                    self.juice_output_label.place(x=180, y=530)     
-                    self.juice_output_label.configure(text='水')
-                    self.coin_count -= 110
-                    self.tonyu_label2.configure(text=f'{self.coin_count}')
-                    if self.coin_count < 160:
-                            self.cola_buy_btn.configure(bg='red')
-                            self.tea_buy_btn.configure(bg='red')
-                    if self.coin_count < 110:
-                            self.water_buy_btn.configure(bg='red')
+            if self.water_count > 1:
+                if water_lamp == 'blue':
+                        self.juice_output_label.place(x=180, y=530)     
+                        self.juice_output_label.configure(text='水')
+                        self.water_count -= 1
+                        self.coin_count -= 110
+                        self.tonyu_label2.configure(text=f'{self.coin_count}')
+                        if self.coin_count < 160:
+                                self.cola_buy_btn.configure(bg='red')
+                                self.tea_buy_btn.configure(bg='red')
+                        if self.coin_count < 110:
+                                self.water_buy_btn.configure(bg='red')
+            else:
+                messagebox.showinfo('売り切れ！', '水が売り切れました。')
+                self.water_buy_btn.configure(bg='green')
+                self.water_buy.configure(text='売り切れ')
         
 
 if __name__ == '__main__':
