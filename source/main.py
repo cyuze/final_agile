@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import messagebox
+import random
 
 class Application(tk.Frame):
     def __init__(self, master):
@@ -42,16 +43,24 @@ class Application(tk.Frame):
         # 画像オブジェクトをラベルに貼り付けて表示
         # 自販機の画像
         self.zihanki = tk.Label(self, image=self.img1)
+        self.zihanki.place(x=0, y=0)
         
         self.label_ret_coin2 = tk.Label(self, text='円',fg='black', bg='#e5231e', font=('', 20))
         self.label_ret_coin2.place(x=255,y=410)
-                
-        # 水の本数格納変数
+
+        #  水カウント変数
         self.water_count = 10
-        # コーラの本数
+        #  コーラカウント変数
         self.cola_count = 10
-        # お茶の本数
+        #  お茶カウント変数
         self.tea_count = 10
+        #  全商品カウント変数
+        self.all_count = self.water_count + self.cola_count + self.tea_count
+        #  購入カウント変数
+        self.buy_count = 0
+        # 当たりフラグ
+        self.hit_flag = False
+
         # おつり表示
         self.label_show_retcoin = tk.Label(self, text='', bg='#e5231e', font=('', 20), width=8, fg='white', anchor='e')
         self.label_show_retcoin.place(x=140, y=410)
@@ -167,6 +176,8 @@ class Application(tk.Frame):
         self.senen = tk.Label(self, image=self.img7, bg='#e5231e')
         self.senen.place(x=280, y=457)
         
+        
+        
         self.tonyu_label1 = tk.Label(self, text='投  入\n金  額', bg='#e5231e', font=('', 20))
         self.tonyu_label1.place(x=60, y=340)
         
@@ -206,47 +217,49 @@ class Application(tk.Frame):
 
         
         
-        self.tonyu_label1 = tk.Label(self, text='投  入\n金  額', bg='#e5231e', font=('', 20))
-        self.tonyu_label1.place(x=60, y=340)
-        
-        self.coin_count = 0
-        self.tonyu_label2 = tk.Label(self, text=f'{self.coin_count}', bg='black', font=('', 20), width=8, fg='green', anchor='e')
-        self.tonyu_label2.place(x=140, y=350)
-        
-        self.tonyu_label3 = tk.Label(self, text='円', bg='#e5231e', font=('', 20))
-        self.tonyu_label3.place(x=255, y=350)
-        
-        if self.coin_count >= 160:
-            self.cola_buy_btn.configure(bg='blue')
-        
     def goen_click(self, event=None):
         messagebox.showinfo('投入エラー', '5円硬貨は使えません')
         
     def juen_click(self, event=None):
-        self.coin_count += 10
-        self.tonyu_label2.configure(text=f'{self.coin_count}')
-        self.update_coin()
+        if self.coin_count >= 2990:
+            messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        else:
+            self.coin_count += 10
+            self.tonyu_label2.configure(text=f'{self.coin_count}')
+            self.update_coin()
         
     def gojuen_click(self, event=None):
-        self.coin_count += 50
-        self.tonyu_label2.configure(text=f'{self.coin_count}')
-        self.update_coin()
-        
+        if self.coin_count >= 2950:
+            messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        else:
+            self.coin_count += 50
+            self.tonyu_label2.configure(text=f'{self.coin_count}')
+            self.update_coin()
+            
         
     def hyakuen_click(self, event=None):
-        self.coin_count += 100
-        self.tonyu_label2.configure(text=f'{self.coin_count}')
-        self.update_coin()
+        if self.coin_count > 2800:
+            messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        else:
+            self.coin_count += 100
+            self.tonyu_label2.configure(text=f'{self.coin_count}')
+            self.update_coin()
         
     def gohyakuen_click(self, event=None):
-        self.coin_count += 500
-        self.tonyu_label2.configure(text=f'{self.coin_count}')
-        self.update_coin()
+        if self.coin_count >= 2500:
+            messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        else:
+            self.coin_count += 500
+            self.tonyu_label2.configure(text=f'{self.coin_count}')
+            self.update_coin()
         
     def senen_click(self, event=None):
-        self.coin_count += 1000
-        self.tonyu_label2.configure(text=f'{self.coin_count}')
-        self.update_coin()
+        if self.coin_count >= 2000:
+            messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        else:
+            self.coin_count += 1000
+            self.tonyu_label2.configure(text=f'{self.coin_count}')
+            self.update_coin()
         
     def update_coin(self):
         if self.coin_count >= 160:
@@ -269,67 +282,113 @@ class Application(tk.Frame):
             else:
                 self.water_buy_btn.configure(bg='green')
         
-        # if self.coin_count >= 3000:
-        #     messagebox.showwarning('投入エラー', '3000円以上は投入できません')
+        
             
             
         
     def cola_buy_event(self, event):
             cola_lamp = self.cola_buy_btn.cget('bg')  #ランプの色
+
             if self.cola_count > 1:
-                if cola_lamp == 'blue':
-                        self.juice_output_label.place(x=180, y=530)     
-                        self.juice_output_label.configure(text='コーラ')
-                        self.cola_count -= 1
+                if cola_lamp == 'blue' or self.hit_flag:
+                    self.juice_output_label.place(x=180, y=530)     
+                    self.juice_output_label.configure(text='コーラ')
+                    self.cola_count -= 1
+                    if self.hit_flag:
+                        self.coin_count -= 0
+                        self.hit_flag = False
+                        self.tea_price.configure(text='160円')
+                        self.cola_price.configure(text='160円')
+                        self.water_price.configure(text='110円')
+                    else:
                         self.coin_count -= 160
-                        self.tonyu_label2.configure(text=f'{self.coin_count}')
-                        if self.coin_count < 160:
-                                self.cola_buy_btn.configure(bg='red')
-                                self.tea_buy_btn.configure(bg='red')
-                        if self.coin_count < 110:
-                                self.water_buy_btn.configure(bg='red')
+                    self.tonyu_label2.configure(text=f'{self.coin_count}')
+                    if self.coin_count < 160:
+                            self.cola_buy_btn.configure(bg='red')
+                            self.tea_buy_btn.configure(bg='red')
+                    if self.coin_count < 110:
+                            self.water_buy_btn.configure(bg='red')
+                    self.winning_func()
             else:
                 messagebox.showinfo('売り切れ！', 'コーラが売り切れました。')
                 self.cola_buy_btn.configure(bg='green')
                 self.cola_buy.configure(text='売り切れ')
+                self.winning_func()
 
     def tea_buy_event(self, event):
             tea_lamp = self.tea_buy_btn.cget('bg')  #ランプの色
             if self.tea_count > 1:
-                if tea_lamp == 'blue':
+                if tea_lamp == 'blue' or self.hit_flag:
                         self.juice_output_label.place(x=180, y=530)     
                         self.juice_output_label.configure(text='お茶')
                         self.tea_count -= 1
-                        self.coin_count -= 160
+                        if self.hit_flag:
+                            self.coin_count -= 0
+                            self.hit_flag = False
+                            self.tea_price.configure(text='160円')
+                            self.cola_price.configure(text='160円')
+                            self.water_price.configure(text='110円')
+                        else:
+                            self.coin_count -= 160
+                            
                         self.tonyu_label2.configure(text=f'{self.coin_count}')
                         if self.coin_count < 160:
                                 self.cola_buy_btn.configure(bg='red')
                                 self.tea_buy_btn.configure(bg='red')
                         if self.coin_count < 110:
                                 self.water_buy_btn.configure(bg='red')
+                        self.winning_func()
+                                    
             else:
                 messagebox.showinfo('売り切れ！', 'お茶が売り切れました。')
                 self.tea_buy_btn.configure(bg='green')
                 self.tea_buy.configure(text='売り切れ')
+                self.winning_func()
+                
                 
     def water_buy_event(self, event):
             water_lamp = self.water_buy_btn.cget('bg')  #ランプの色
             if self.water_count > 1:
-                if water_lamp == 'blue':
+                if water_lamp == 'blue' or self.hit_flag:
                         self.juice_output_label.place(x=180, y=530)     
                         self.juice_output_label.configure(text='水')
                         self.water_count -= 1
-                        self.coin_count -= 110
-                        self.tonyu_label2.configure(text=f'{self.coin_count}')
+                        if self.hit_flag:
+                            self.coin_count -= 0
+                            self.tea_price.configure(text='160円')
+                            self.cola_price.configure(text='160円')
+                            self.water_price.configure(text='110円')
+                            self.hit_flag = False
+                        else:
+                            self.coin_count -= 110
+                            self.tonyu_label2.configure(text=f'{self.coin_count}')
                         if self.coin_count < 160:
                                 self.cola_buy_btn.configure(bg='red')
                                 self.tea_buy_btn.configure(bg='red')
                         if self.coin_count < 110:
                                 self.water_buy_btn.configure(bg='red')
+                        self.winning_func()
             else:
                 messagebox.showinfo('売り切れ！', '水が売り切れました。')
                 self.water_buy_btn.configure(bg='green')
                 self.water_buy.configure(text='売り切れ')
+                self.winning_func()                    
+        
+    # 当たり機能関数
+    def winning_func(self):
+        self.buy_count += 1
+        if self.buy_count % 5 == 0:
+            self.buy_count = 0
+            random_num = random.randint(0, 1)
+            if random_num == 0:
+                messagebox.showinfo('当たり', '当たりです！一本無料です！')
+                self.hit_flag = True
+                self.cola_price.configure(text='無料')
+                self.tea_price.configure(text='無料')
+                self.water_price.configure(text='無料')
+            elif random_num == 1:
+                messagebox.showinfo('ハズレ', 'ハズレです！')
+
         
 
 if __name__ == '__main__':
