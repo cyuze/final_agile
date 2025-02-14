@@ -2,6 +2,19 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import messagebox
 import random
+import os
+import sys
+
+def resource_path(relative_path):
+    """ Get the absolute path to the resource, works for both development and PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+    
 
 class Application(tk.Frame):
     def __init__(self, master):
@@ -15,10 +28,12 @@ class Application(tk.Frame):
 
     # ウィジェットを配置して画面作るメソッド
     def create_widgets(self):
+        kikai = resource_path("img/自動販売機.png")
         # 画像の読み込み
-        cimg1 = Image.open("./img/自動販売機.png")
+        cimg1 = Image.open(kikai)
 
-        cimg_ins_coin = Image.open("./img/コイン投入口.png")
+        ins_coin = resource_path("img/コイン投入口.png")
+        cimg_ins_coin = Image.open(ins_coin)
         # 画像のリサイズ
         cimg1 = cimg1.resize((480, 653))  # 画像を2倍にする例
         cimg_ins_coin = cimg_ins_coin.resize((132, 95))
@@ -26,9 +41,12 @@ class Application(tk.Frame):
         self.img1 = ImageTk.PhotoImage(cimg1)
         self.img_ins_coin = ImageTk.PhotoImage(cimg_ins_coin)
 
-        cimg_cola = Image.open("./img/コーラ.png")
-        cimg_water = Image.open("./img/水.png")
-        cimg_tea = Image.open("./img/お茶.png")
+        cola = resource_path("img/コーラ.png")
+        water = resource_path("img/水.png")
+        tea = resource_path("img/お茶.png")
+        cimg_cola = Image.open(cola)
+        cimg_water = Image.open(water)
+        cimg_tea = Image.open(tea)
         # 画像のリサイズ
         cimg1 = cimg1.resize((480, 653))  # 画像を2倍にする例
         cimg_cola = cimg_cola.resize((100, 100))
@@ -126,8 +144,8 @@ class Application(tk.Frame):
         self.water_buy_btn.place(x=340, y=263)
 
 # ======= rui
-        
-        cimg2 = Image.open("./img/5円.png")
+        goen = resource_path("img/5円.png")
+        cimg2 = Image.open(goen)
         cimg2 = cimg2.resize((40, 40)) 
         self.img2 = ImageTk.PhotoImage(cimg2)
         self.goen = tk.Label(self, image=self.img2, bg='#e5231e')
@@ -136,7 +154,8 @@ class Application(tk.Frame):
         self.goen.bind('<Button-1>', self.goen_click)
                 
         
-        cimg3 = Image.open("./img/10円.png")
+        juen = resource_path("img/10円.png")
+        cimg3 = Image.open(juen)
         cimg3 = cimg3.resize((40, 40))  
         self.img3 = ImageTk.PhotoImage(cimg3)
         self.juen = tk.Label(self, image=self.img3, bg='#e5231e')
@@ -144,7 +163,8 @@ class Application(tk.Frame):
         
         self.juen.bind('<Button-1>', self.juen_click)
         
-        cimg4 = Image.open("./img/50円.png")
+        gojuen = resource_path("img/50円.png")
+        cimg4 = Image.open(gojuen)
         cimg4 = cimg4.resize((40, 40))  
         self.img4 = ImageTk.PhotoImage(cimg4)
         self.gojuen = tk.Label(self, image=self.img4, bg='#e5231e')
@@ -153,7 +173,8 @@ class Application(tk.Frame):
         self.gojuen.bind('<Button-1>', self.gojuen_click)
         
         
-        cimg5 = Image.open("./img/100円.png")
+        hyaku = resource_path("img/100円.png")
+        cimg5 = Image.open(hyaku)
         cimg5 = cimg5.resize((40, 40))  
         self.img5 = ImageTk.PhotoImage(cimg5)
         self.hyakuen = tk.Label(self, image=self.img5, bg='#e5231e')
@@ -162,7 +183,8 @@ class Application(tk.Frame):
         self.hyakuen.bind('<Button-1>', self.hyakuen_click)
         
         
-        cimg6 = Image.open("./img/500円.png")
+        gohyaku = resource_path("img/500円.png")
+        cimg6 = Image.open(gohyaku)
         cimg6 = cimg6.resize((40, 40))  
         self.img6 = ImageTk.PhotoImage(cimg6)
         self.gohyakuen = tk.Label(self, image=self.img6, bg='#e5231e')
@@ -170,7 +192,8 @@ class Application(tk.Frame):
 
         self.gohyakuen.bind('<Button-1>', self.gohyakuen_click)
         
-        cimg7 = Image.open("./img/1000円.png")
+        senn = resource_path("img/1000円.png")
+        cimg7 = Image.open(senn)
         cimg7 = cimg7.resize((90, 40))  
         self.img7 = ImageTk.PhotoImage(cimg7)
         self.senen = tk.Label(self, image=self.img7, bg='#e5231e')
@@ -389,7 +412,6 @@ class Application(tk.Frame):
             elif random_num == 1:
                 messagebox.showinfo('ハズレ', 'ハズレです！')
 
-        
 
 if __name__ == '__main__':
     root = tk.Tk()
